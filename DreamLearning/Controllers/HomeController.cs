@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using DreamLearning.Models;
+using DreamLearning.Service;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +20,7 @@ namespace DreamLearning.Controllers
         [HttpPost]
         public ActionResult Index(HttpPostedFileBase postedFIle)
         {
-            // StreamReader sr = new StreamReader(Server.MapPath("//Docs//Address.csv"));
+            // StreamReader sr = new StreamReader();
             List<Address> addresses = new List<Address>();
             string filepath = string.Empty; 
             if(postedFIle != null)  
@@ -56,9 +57,11 @@ namespace DreamLearning.Controllers
 
         }
 
-        public ActionResult TesteGet()
+        public ActionResult Teste()
         {
-            
+            string path = Server.MapPath("//DB//banco.db");
+            MainSqlService mainService = new MainSqlService();
+            mainService.CreateDatabase(path);
             return View();
 
         }

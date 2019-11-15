@@ -11,7 +11,7 @@ namespace DreamLearning.Models
         public string Inep { get; set; }
         public string Nome{ get; set; }
         public string AbreviacaoNome{ get; set; }
-        public int Telefone { get; set; }
+        public string Telefone { get; set; }
         public string Email { get; set; }
 
         /*
@@ -46,8 +46,8 @@ namespace DreamLearning.Models
 
     public class GeolocationPoint
     {
-        public float Latitude { get; set; }
-        public float Longitude { get; set; }
+        public string Latitude { get; set; }
+        public string Longitude { get; set; }
         public string Inep { get; set; }
 
     }

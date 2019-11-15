@@ -11,7 +11,7 @@ namespace DreamLearning.Service
 
         public void InsertAddress()
         {
-            SQLiteCommand command;
+            _ = SQLiteConnection.ConnectionPool;
 
 
         }
@@ -22,8 +22,9 @@ namespace DreamLearning.Service
 
         }
 
-        public void Inser()
+        public void CreateDatabase(string fullPath)
         {
+            SQLiteConnection.CreateFile(fullPath);
 
         }
 
