@@ -1,19 +1,33 @@
 ﻿@using DreamLearning.Models
-@model IEnumerable<Address>   
-    @{
-        ViewBag.Title = "Home Page";
-        
-    }
+@model IEnumerable<Address>
+@{
+    ViewBag.Title = "Home Page";
 
-    <div class="jumbotron">
-      <div class="row">
+}
+
+<div class="container">
+    <div class="row">
         @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <input type="file" name="postedFile" class=""/>
-            <input type="submit" class="btn btn-info"/>
+            <div class="input-group mb-3" style="position:relative; top:50px;">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Upload</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="postedFIle">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                </div>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="submit">Enviar</button>
+                </div>
+            </div>
+
+
+
         }
 
-        @if(Model!= null && Model.Count() > 0)
+
+        @if (Model != null && Model.Count() > 0)
         {
             <table class="table-striped">
                 <tr>
@@ -23,18 +37,18 @@
                     <td>CEP</td>
                     <td>Bairro</td>
                 </tr>
-                @foreach(Address address in Model)
+                @foreach (Address address in Model)
                 {
-            <tr>
-                <td>@address.Inep</td>
-                <td>@address.Logradouro</td>
-                <td>@address.Numero</td>
-                <td>@address.Cep</td>
-                <td>@address.Bairro</td>
-            </tr>
+                    <tr>
+                        <td>@address.Inep</td>
+                        <td>@address.Logradouro</td>
+                        <td>@address.Numero</td>
+                        <td>@address.Cep</td>
+                        <td>@address.Bairro</td>
+                    </tr>
                 }
             </table>
-            
+
         }
-        </div>
     </div>
+</div>
