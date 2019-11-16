@@ -8,7 +8,8 @@ namespace DreamLearning.Dto
 {
     public class TransData
     {
-        public Address Address { get; set; }
-        public bool Teste { get; set; }
+        public List<Address> Addresses { get; set; }
+        public List<GeolocationPoint> Points {get; set;}
+        public List<School> Schools { get; set; }
     }
 }

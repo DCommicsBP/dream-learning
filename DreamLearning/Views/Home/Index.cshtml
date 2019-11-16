@@ -4,51 +4,45 @@
     ViewBag.Title = "Home Page";
 
 }
-
-<div class="container">
-    <div class="row">
-        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-            <div class="input-group mb-3" style="position:relative; top:50px;">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Upload</span>
-                </div>
-                <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="postedFIle">
-                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-                </div>
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="submit">Enviar</button>
+    <div class="container-fluid h-100">
+        <div class="row mh-100">
+            <div class="col-4 border-right p-2">
+                <div class="row">
+                    <div class="col-12">
+                        <form class="form-inline">
+                            <div class="form-group w-75 pr-1">
+                                <input type="search"
+                                       class="form-control w-100"
+                                       id="inputSearch"
+                                       placeholder="Search">
+                            </div>
+                            <span id="btn-search" href="#" class="btn btn-info" style="font-size: 12px;">
+                                <i class="fas fa-search-location">Busca</i>
+                            </span>
+                        </form>
+                    </div>
+                    <div class="col-12 h-100">
+                        <ul id="addressList" class="list-group" style="max-height: 85vh; overflow: auto;"></ul>
+                    </div>
                 </div>
             </div>
+            <div class="col-8 w-50 p-0 m-0">
+                <img src="~/Content/fake_map.png" style="height: 600px;" class="img-fluid w-100" alt="Fake Map" />
+                <div id="map" style="height: 500px; width:882px; background-color:rebeccapurple; color:azure; font-family:Verdana; font-size:30px" class="jumbotron-fluid w-100">Carregando ...</div>
+            </div>
+        </div>
 
 
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDyrPn6v-1mKCm5YkPvdMnz9OHwev-yMVQ&callback=initMap"
+                async defer></script>
+        <script>
+            var map;
+            function initMap(element) {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: -30.030194684981844, lng: -51.22252230705834 },
+                    zoom: 16
+                });
+            }
+        </script>
 
-        }
-
-
-        @if (Model != null && Model.Count() > 0)
-        {
-            <table class="table-striped">
-                <tr>
-                    <td>ID</td>
-                    <td>Logradouro</td>
-                    <td>Numero</td>
-                    <td>CEP</td>
-                    <td>Bairro</td>
-                </tr>
-                @foreach (Address address in Model)
-                {
-                    <tr>
-                        <td>@address.Inep</td>
-                        <td>@address.Logradouro</td>
-                        <td>@address.Numero</td>
-                        <td>@address.Cep</td>
-                        <td>@address.Bairro</td>
-                    </tr>
-                }
-            </table>
-
-        }
     </div>
-</div>

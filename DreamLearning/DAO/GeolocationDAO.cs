@@ -29,8 +29,9 @@ namespace DreamLearning.DAO
                 {
                     cmd.CommandText = "INSERT INTO GeolocationPoint (Inep, Latitude, Longitude) values(@Inep, @Latitude, @Longitude)";
                     cmd.Parameters.AddWithValue("@Inep", geolocation.Inep);
-                    cmd.Parameters.AddWithValue("@Bairro", geolocation.Longitude);
-                    cmd.Parameters.AddWithValue("@Cep", geolocation.Latitude);
+                    cmd.Parameters.AddWithValue("@Longitude", geolocation.Longitude);
+                    cmd.Parameters.AddWithValue("@Latitude", geolocation.Latitude);
+
                     cmd.ExecuteNonQuery();
                     cmd.Connection.Close(); 
                     
@@ -38,8 +39,8 @@ namespace DreamLearning.DAO
             }
             catch (Exception ex)
             {
-                throw new Exception("Não foi possível gravar o registro no banco: " + ex.Message);
-            }
+               // throw new Exception("Não foi possível gravar o registro no banco: " + ex.Message);
+            }   
 
         }
         public List<GeolocationPoint> AllGeolocations(string path)

@@ -99,3 +99,5 @@ C:\Users\daione.pavan\source\repos\DreamLearning\DreamLearning\bin\System.Net.Ht
 C:\Users\daione.pavan\source\repos\DreamLearning\DreamLearning\bin\System.Web.Http.dll
 C:\Users\daione.pavan\source\repos\DreamLearning\DreamLearning\bin\System.Net.Http.Formatting.xml
 C:\Users\daione.pavan\source\repos\DreamLearning\DreamLearning\bin\System.Web.Http.xml
+C:\Users\daione.pavan\source\repos\DreamLearning\DreamLearning\bin\BouncyCastle.Crypto.dll
+C:\Users\daione.pavan\source\repos\DreamLearning\DreamLearning\bin\BouncyCastle.Crypto.xml

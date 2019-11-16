@@ -39,7 +39,7 @@ namespace DreamLearning.DAO
             }
             catch (Exception ex)
             {
-                throw new Exception("Não foi possível gravar o registro no banco: " + ex.Message); 
+              throw new Exception("Não foi possível gravar o registro no banco: " + ex.Message); 
             }
 
         }
@@ -101,7 +101,7 @@ namespace DreamLearning.DAO
             }
             catch (Exception ex)
             {
-                throw ex; throw new Exception("Não foi possível ler o registro no banco: " + ex.Message);
+               throw new Exception("Não foi possível ler o registro no banco: " + ex.Message);
             }
 
             if (school == null)
