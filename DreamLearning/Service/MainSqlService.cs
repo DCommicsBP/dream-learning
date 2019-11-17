@@ -13,13 +13,13 @@ namespace DreamLearning.Service
 
         private AddressDAO addressDAO = new AddressDAO();
         private SchoolDAO schoolDAO = new SchoolDAO();
-        private GeolocationDAO geolocationDAO = new GeolocationDAO(); 
+        private GeolocationDAO geolocationDAO = new GeolocationDAO();
 
         // Inserts
         public void InsertAddress(Address address, string path)
         {
             if (string.IsNullOrEmpty(path))
-                Console.WriteLine("Não foi possível gravar"); 
+                Console.WriteLine("Não foi possível gravar");
             else
                 addressDAO.InsertAddress(address, path);
         }
@@ -44,10 +44,44 @@ namespace DreamLearning.Service
         }
 
         // Lists
+        public List<GeolocationPoint> GeolocationPoints(string path)
+        {
+            List<GeolocationPoint> geolocations = new List<GeolocationPoint>();
+            geolocations = geolocationDAO.AllGeolocations(path);
+
+            if (geolocations == null)
+            {
+                throw new Exception("Não é foram encontrado os registros. ");
+            }
+            return geolocations;
+
+        }
+
+      public List<School> GetSchools(string path)
+        {
+            List<School> schools = new List<School>();
+            schools = schoolDAO.AllSchools(path); 
+            if(schools.Count() == 0)
+            {
+                throw new Exception("Não foram encontrados registros. ");
+            }
+            return schools; 
+        }
 
 
+        public List<Address> GetAddresses(string path)
+        {
+            List<Address> addresses = new List<Address>();
+            addresses = addressDAO.AllAddresses(path);
+            if (addresses.Count() == 0)
+            {
+                throw new Exception("Não foram encontrados registros. ");
+            }
+            return addresses;
 
-         // Create database. 
+        }
+
+        // Create database. 
 
         public void CreateDatabase(string fullPath)
         {

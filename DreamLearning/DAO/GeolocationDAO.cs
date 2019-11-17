@@ -48,20 +48,20 @@ namespace DreamLearning.DAO
             List<GeolocationPoint> geolocationPoints= new List<GeolocationPoint>();
             try
             {
-                var command = DbConnection(path).CreateCommand();
-                command.CommandText = "SELECT * FROM GeolocationPoint";
-
-                var reader = command.ExecuteReader();
-                command.Connection.Close(); 
-
-                while (reader.Read())
+                SQLiteConnection conn = new SQLiteConnection("Data Source=" + path + "; Version=3");
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                SQLiteCommand com = new SQLiteCommand("SELECT * FROM GeolocationPoint",conn);
+                SQLiteDataReader dataReader = com.ExecuteReader();
+                int count = dataReader.FieldCount;
+                while (dataReader.Read())
                 {
                     geolocationPoints.Add(new GeolocationPoint
                     {
-                        Inep = reader["Inep"].ToString(),
-                        Latitude = reader["Latitude"].ToString(),
-                        Longitude = reader["Longitude"].ToString()
-                      
+                        Inep = dataReader["Inep"].ToString(),
+                        Latitude = dataReader["Latitude"].ToString(),
+                        Longitude = dataReader["Longitude"].ToString()
+
                     });
                 }
             }

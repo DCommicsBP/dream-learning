@@ -49,24 +49,25 @@ namespace DreamLearning.DAO
             List<Address> addressess = new List<Address>();
             try
             {
-                var command = DbConnection(path).CreateCommand();
-                command.CommandText = "SELECT * FROM Address";
-
-                var reader = command.ExecuteReader();
-
-                while (reader.Read())
+                SQLiteConnection conn = new SQLiteConnection("Data Source=" + path + "; Version=3");
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                SQLiteCommand com = new SQLiteCommand("SELECT * FROM Address",conn);
+                SQLiteDataReader dataReader = com.ExecuteReader();
+                int count = dataReader.FieldCount;
+                while (dataReader.Read())
                 {
                     addressess.Add(new Address
-                    {
-                        Inep = reader["Inep"].ToString(),
-                        Logradouro = reader["Logradouro"].ToString(),
-                        Numero = reader["Numero"].ToString(),
-                        Cep = reader["Cep"].ToString(),
-                        Bairro = reader["Bairro"].ToString(),
-                    });
+                        {
+                            Inep = dataReader["Inep"].ToString(),
+                            Logradouro = dataReader["Logradouro"].ToString(),
+                            Numero = dataReader["Numero"].ToString(),
+                            Cep = dataReader["Cep"].ToString(),
+                            Bairro = dataReader["Bairro"].ToString(),
+                        });
+                    }
                 }
-            }
-            catch (Exception ex)
+           catch (Exception ex)
             {
                 throw ex;
             }
@@ -81,23 +82,27 @@ namespace DreamLearning.DAO
             Address address = new Address();
             try
             {
-                var command = DbConnection(path).CreateCommand();
-                command.CommandText = "SELECT * FROM Address WHERE Inep like @Inep";
 
-                var reader = command.ExecuteReader();
+                SQLiteConnection conn = new SQLiteConnection("Data Source=" + path + "; Version=3");
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                SQLiteCommand com = new SQLiteCommand("SELECT * FROM Address WHERE Inep like " + Innep, conn);
+                SQLiteDataReader dataReader = com.ExecuteReader();
 
-                while (reader.Read())
+                while (dataReader.Read())
                 {
                     address = (new Address
                     {
-                        Inep = reader["Inep"].ToString(),
-                        Logradouro = reader["Logradouro"].ToString(),
-                        Numero = reader["Numero"].ToString(),
-                        Cep = reader["Cep"].ToString(),
-                        Bairro = reader["Bairro"].ToString(),
+                        Inep = dataReader["Inep"].ToString(),
+                        Logradouro = dataReader["Logradouro"].ToString(),
+                        Numero = dataReader["Numero"].ToString(),
+                        Cep = dataReader["Cep"].ToString(),
+                        Bairro = dataReader["Bairro"].ToString(),
                     });
                 }
+                conn.Close();
             }
+            
             catch (Exception ex)
             {
                 throw ex;

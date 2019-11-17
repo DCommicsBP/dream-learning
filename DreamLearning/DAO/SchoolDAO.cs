@@ -17,8 +17,6 @@ namespace DreamLearning.DAO
             string atualPath = "Data Source={relativePath}; Version=3;";
 
             sqliteConnection = new SQLiteConnection(atualPath.Replace("{relativePath}", path));
-           
-            sqliteConnection.Open();
             return sqliteConnection;
         }
         public void InsertSchool(School school, string path)
@@ -48,21 +46,21 @@ namespace DreamLearning.DAO
             List<School> schools= new List<School>();
             try
             {
-                var command = DbConnection(path).CreateCommand();
-                command.CommandText = "SELECT * FROM School";
-                command.Connection.Close();
-                
-                var reader = command.ExecuteReader();
+                SQLiteConnection conn = new SQLiteConnection("Data Source=" + path + "; Version=3");
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                SQLiteCommand com = new SQLiteCommand("SELECT * FROM School", conn);
+                SQLiteDataReader dataReader = com.ExecuteReader();
 
-                while (reader.Read())
+                while (dataReader.Read())
                 {
                     schools.Add(new School
                     {
-                        Inep = reader["Inep"].ToString(),
-                        AbreviacaoNome = reader["AbreviacaoNome"].ToString(),
-                        Nome= reader["Nome"].ToString(),
-                        Telefone = reader["Telefone"].ToString(),
-                        Tipo = reader["Tipo"].ToString(),
+                        Inep = dataReader["Inep"].ToString(),
+                        AbreviacaoNome = dataReader["AbreviacaoNome"].ToString(),
+                        Nome= dataReader["Nome"].ToString(),
+                        Telefone = dataReader["Telefone"].ToString(),
+                        Tipo = dataReader["Tipo"].ToString(),
                     });
                 }
             }
