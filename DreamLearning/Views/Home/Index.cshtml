@@ -7,68 +7,181 @@
     string key = System.Web.Configuration.WebConfigurationManager.AppSettings["googleMaps"];
 
 }
-    <div class="container-fluid h-100" style="position:relative; top: 50px; ">
-        <div class="row mh-100">
-            <div class="col-4 border-right p-2">
-                <div class="row">
-                    <div class="col-12">
-                        <form class="form-inline">
-                            <div class="form-group w-75 pr-1">
-                                <input type="search"
-                                       class="form-control w-100"
-                                       id="inputSearch"
-                                       placeholder="Search">
-                            </div>
-                            <span id="btn-search" href="#" class="btn btn-info" style="font-size: 12px;">
-                                <i class="fas fa-search-location">Busca</i>
-                            </span>
-                        </form>
-                    </div>
-                    <div class="col-12 h-100">
-                        <ul id="addressList" class="list-group" style="max-height: 85vh; overflow: auto;"></ul>
-                    </div>
+<div class="container-fluid h-100" style="position:relative; top: 50px; ">
+    <div class="row mh-100">
+        <div class="col-4 border-right p-2">
+            <div class="row">
+                <div class="col-12">
+                    <form class="form-inline">
+                        <div class="form-group w-75 pr-1">
+                            <input type="search"
+                                   class="form-control w-100"
+                                   id="inputSearch"
+                                   placeholder="Search">
+                        </div>
+                        <span id="btn-search" href="#" class="btn btn-info" style="font-size: 12px;">
+                            <i class="fas fa-search-location">Busca</i>
+                        </span>
+                    </form>
+                </div>
+                <div class="col-12 h-100">
+                    <ul id="addressList" class="list-group" style="max-height: 85vh; overflow: auto;"></ul>
                 </div>
             </div>
-            <div class="col-8 w-50 p-0 m-0">
-                <div id="map" style="height: 500px; width:882px; background-color:rebeccapurple; color:azure; font-family:Verdana; font-size:30px" class="jumbotron-fluid w-100">Carregando ...</div>
-            </div>
         </div>
+        <div class="col-8 w-50 p-0 m-0">
+            <div id="map" style="height: 500px; width:882px; background-color:rebeccapurple; color:azure; font-family:Verdana; font-size:30px" class="jumbotron-fluid w-100">Carregando ...</div>
+        </div>
+    </div>
 
-        <script src="https://maps.googleapis.com/maps/api/js?key=@key&&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=@key&&libraries=places"></script>
 
-        <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
 
-        <div class="gcse-searchresults-only"></div>
-        <script>
+    <div class="gcse-searchresults-only"></div>
+    <script>
 
         let adrdresses = [];
         let points = [];
         let schools = [];
 
-            let markers = [];
-          //  let places = [];
-
-
-            let  map = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: -30.030194684981844, lng: -51.22252230705834 },
-                    zoom: 16
-                });
-
-
-
-            let input = document.getElementById("inputSearch");
-            let go 
-
-            let placesMaps = new google.maps.places.SearchBox(input)
-            map.addListener('places_changed', function () {
-                placesMaps.setBounds(map.getBounds())
-
-            }); 
         
 
 
+        let markers = [];
+        //  let places = [];
+        let center = { lat: -30.030194684981844, lng: -51.22252230705834 };
+
+        let map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -30.030194684981844, lng: -51.22252230705834 },
+            zoom: 16
+        });
+
+        let input = document.getElementById("inputSearch");
+
+        let defaultBounds = new google.maps.LatLngBounds(
+            new google.maps.LatLng(-30.030194684981844, -51.22252230705834))
+        let searchBox = new google.maps.places.SearchBox(input, {
+            bounds: defaultBounds
+        });
+
+        let service = new google.maps.places.PlacesService(map);
+
+        // Perform a nearby search.
+        searchBox.addListener('places_changed', function () {
+            let places = searchBox.getPlaces();
+
+            if (places.length == 0) {
+                return;
+            }
+
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+
+            let bounds = new google.maps.LatLngBounds();
+            places.forEach(function (place) {
+                if (!place.geometry) {
+                    console.log("Returned place contains no geometry");
+                    return;
+
+                    map
+                }
+                let icon = {
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(25, 25)
+                };
+
+                // Create a marker for each place.
+                markers.push(new google.maps.Marker({
+                    map: map,
+                    icon: icon,
+                    title: place.name,
+                    position: place.geometry.location
+                }));
+
+                let newPoint = {lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }
+                map.setCenter({lat: place.geometry.location.lat(), lng: place.geometry.location.lng() }, 5)
+
+                $.get('@Url.Action("GetAllData","Home" )')
+                    .then(response => {
+                        points = response.Points
+                        addresses = response.Addresses;    
+                        schools = response.Schools
+
+                        let subArrayAddresses = [];
+                        let subArrayPoints = []; 
+                        let subArraySchools = []; 
+
+                        subArrayPoints = searchLocations(points, newPoint);
+                        
+
+                        subArrayPoints.map((point) => {
+                            addresses.map(address => {
+                                if (address.Inep === point.inep) {
+                                    subArrayAddresses.push(address); 
+                                }
+                            });
+                        });
+
+                        subArrayPoints.map((point) => {
+                            schools.map((school) => {
+                                if (school.Inep === point.inep) {
+                                    subArraySchools.push(school); 
+                                }
+                            })
+                        })
 
 
-        </script>
+                        console.log(subArraySchools)
 
-    </div>
+                        console.log(subArrayAddresses)
+                        
+                    }).catch(error => {
+                        console.log(error)
+                        alert("Não foi possível encontrar as informações requisitadas. "); 
+                        return; 
+                    }); 
+
+
+                const getDistance = (coord1, coord2) => {
+                    const R = 6371;
+                    const dLat = (coord2.lat - coord1.lat) * (Math.PI / 180);
+                    const dLon = (coord2.lng - coord1.lng) * (Math.PI / 180);
+                    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(coord1.lat * (Math.PI / 180)) * Math.cos(coord2.lat * (Math.PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    const d = R * c
+
+                    return d;
+                }; 
+
+                const searchLocations = (points, myLocation) => {
+                    return points.map(item => {
+                        item = { lat: item.Latitude, lng: item.Longitude, inep: item.Inep }
+                        return {
+                            ...item,
+                            distance: getDistance(myLocation, item)
+                        }
+                    })
+                        .filter(item => {
+                            if (item.lat!== "0.0" && item.lng !== "0.0")
+                                return item; 
+                        })
+                        .sort((a, b) => a.distance - b.distance)
+                        .slice(0, 5);
+                }; 
+                
+
+            });
+         });
+
+            
+
+
+    </script>
+
+</div>
