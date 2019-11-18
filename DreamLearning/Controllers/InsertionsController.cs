@@ -119,8 +119,8 @@ namespace DreamLearning.Controllers
                         GeolocationPoint geolocation = new GeolocationPoint
                         {
                             Inep = Convert.ToString(row.Split(',')[0]),
-                            Longitude = Convert.ToString(row.Split(',')[1]),
-                            Latitude = Convert.ToString(row.Split(',')[2])
+                            Latitude = Convert.ToString(row.Split(',')[1]),
+                            Longitude= Convert.ToString(row.Split(',')[2])
 
                         };
 

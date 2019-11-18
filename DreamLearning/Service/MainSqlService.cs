@@ -1,10 +1,13 @@
 ﻿using DreamLearning.DAO;
+using DreamLearning.Dto;
 using DreamLearning.Models;
+using DreamLearning.Util; 
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Web;
+
 
 namespace DreamLearning.Service
 {
@@ -14,6 +17,7 @@ namespace DreamLearning.Service
         private AddressDAO addressDAO = new AddressDAO();
         private SchoolDAO schoolDAO = new SchoolDAO();
         private GeolocationDAO geolocationDAO = new GeolocationDAO();
+        public Utils util = new Utils(); 
 
         // Inserts
         public void InsertAddress(Address address, string path)
@@ -44,8 +48,9 @@ namespace DreamLearning.Service
         }
 
         // Lists
-        public List<GeolocationPoint> GeolocationPoints(string path)
+        public List<GeolocationPoint> GeolocationPoints(string path, Coordinate coordinate)
         {
+
             List<GeolocationPoint> geolocations = new List<GeolocationPoint>();
             geolocations = geolocationDAO.AllGeolocations(path);
 
@@ -53,7 +58,7 @@ namespace DreamLearning.Service
             {
                 throw new Exception("Não é foram encontrado os registros. ");
             }
-            return geolocations;
+            return this.util.FilterGeolocation(geolocations, coordinate);
 
         }
 

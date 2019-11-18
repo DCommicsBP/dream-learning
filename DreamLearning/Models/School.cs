@@ -19,6 +19,7 @@ namespace DreamLearning.Models
         public string Latitude { get; set; }
         public string Longitude { get; set; }
         public string Inep { get; set; }
+        public double Distance { get; set; }
 
     }
 

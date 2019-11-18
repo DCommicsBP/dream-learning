@@ -24,15 +24,15 @@ namespace DreamLearning.Controllers
             return View();
         }
 
-        [HttpGet]
-        public ActionResult GetAllData()
+        [HttpPost]
+        public ActionResult GetAllData(Coordinate coordinate)
         {
             string path = Server.MapPath("~/DB/banco.db");
             List<GeolocationPoint> geolocationPoints = new List<GeolocationPoint>();
             List<School> schools = new List<School>();
             List<Address> adresses = new List<Address>();
 
-            geolocationPoints = sqlService.GeolocationPoints(path);
+            geolocationPoints = sqlService.GeolocationPoints(path, coordinate);
             schools = sqlService.GetSchools(path);
             adresses = sqlService.GetAddresses(path);
 
@@ -48,4 +48,6 @@ namespace DreamLearning.Controllers
         }
 
     }
+
+    
 }
