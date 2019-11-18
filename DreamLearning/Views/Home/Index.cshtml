@@ -20,13 +20,10 @@
                                    id="inputSearch"
                                    placeholder="Search">
                         </div>
-                        <span id="btn-search" href="#" class="btn btn-info" style="font-size: 12px;">
-                            <i class="fas fa-search-location">Busca</i>
-                        </span>
                     </form>
                 </div>
                 <div class="col-12 h-100">
-                    <ul id="addressList" class="list-group" style="max-height: 85vh; overflow: auto;"></ul>
+                    <ul id="addressList" class="list-group" style="max-height: 85vh; overflow: auto; position:relative; top:15px;" ></ul>
                 </div>
             </div>
         </div>
@@ -36,124 +33,46 @@
     </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=@key&libraries=places"></script>
-
     <script src="~/Scripts/jquery-3.3.1.js"></script>
-
-    <div class="gcse-searchresults-only"></div>
+    <script src="~/Scripts/Main/Index.js"></script>
+    <script src="~/Scripts/Main/Builders.js"></script>
     <script>
-
-       
-            var adrdresses = [], points = [], schools = [], subArrayAddresses = [], subArrayPoints = [], subArraySchools = [], pointMarkers = [], markers = [], places = [];
-            var newPoint = {};
-            var center = { lat: -30.030194684981844, lng: -51.22252230705834 };
-
-            var map;
-
-                function initialize() {
-                  var mapProp = {
-                    center: { lat: -30.030194684981844, lng: -51.22252230705834 },
-                    zoom: 16,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
-                  };
-                  map = new google.maps.Map(document.getElementById('map'), mapProp);
-                };
-
-
-            var input = document.getElementById("inputSearch");
-
-            var defaultBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-30.030194684981844, -51.22252230705834))
-            var searchBox = new google.maps.places.SearchBox(input, { bounds: defaultBounds });
-
-            var placesService = new google.maps.places.PlacesService(map);
-
-            places.forEach(function (place) {
-                if (!place.geometry) {
-                    console.log("Returned place contains no geometry");
-                    return;
-                }
-                var icon = {
-                    url: place.icon,
-                    size: new google.maps.Size(71, 71),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(17, 34),
-                    scaledSize: new google.maps.Size(25, 25)
-                };
-
-
-                var buttonSend = function () {
-                    document.getElementById('btn-search').onclick = function () {
-                        var input = document.getElementById('inputSearch');
-                        input.focus();
-                        google.maps.event.trigger(input, 'keydown', { keyCode: 13 });
-                    };
-                }
+        var getData = function (place, coord) {
+            var coordinate = coord;
+            placesRecive = place; 
+        $.ajax({
+            url: "@Url.Action("GetAllData","Home" )",
+            type: "POST",
+            dataType: "html",
+            data: { coordinate }
+        }).done(function (resp) {
+               $("li").remove(); 
+         
+            let response = JSON.parse(resp);
+            points = response.Points
+            addresses = response.Addresses;
+            schools = response.Schools
+            let aux = points.slice(0, 10)
+            console.log(aux);
+            aux.map((point) => {
+                schools.map((school) => {
+                    if (school.Inep === point.Inep) {
+                        subArraySchools.push(school);
+                    }
+                });
             });
 
-            searchBox.addListener('places_changed', function () {
-                var places = searchBox.getPlaces();
+            makeMarkers(aux);
+        }).catch(error => {
+            console.log(error)
+            alert("Não foi possível encontrar as informações requisitadas. ");
+            return;
+        });
+        }
 
-                if (places.length == 0) {
-                    return;
-                }
-
-                markers.forEach(function (marker) {
-                    marker.setMap(null);
-                });
-
-                newPoint = { lat: places[0].geometry.location.lat(), lng: places[0].geometry.location.lng() }
-
-                console.log(newPoint)
-                map.setCenter({ lat: places[0].geometry.location.lat(), lng: places[0].geometry.location.lng() }, 13)
-
-                getData({ lat: places[0].geometry.location.lat(), lng: places[0].geometry.location.lng() });
-            });
-
-        var makeMarkers = function (subArrayPoints) {
-            debugger; 
-                subArrayPoints.forEach(element => {
-                    var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(parseFloat(element.Latitude), parseFloat(element.Longitude)),
-                        map: map,
-                        title: "Um teste"
-                    });
-                    markers.push(marker);
-                });
-                markers.forEach(function (marker) {
-                    marker.setMap(marker);
-                });
-            };
-
-        var getData = function (place) {
-            var coordinate = place; 
-                    $.ajax({
-                        url : "@Url.Action("GetAllData","Home" )",
-                        type : "POST",
-                        dataType: "html",
-                        data: { coordinate }
-                    }).done(function (resp) {
-                        let response = JSON.parse(resp);
-                        points = response.Points
-                        addresses = response.Addresses;
-                        schools = response.Schools
-                        
-                        var aux = points.slice(0, 5)
-                        console.log(aux);
-                        aux.map((point) => {
-                            schools.map((school) => {
-                                if (school.Inep === point.Inep) {
-                                    subArraySchools.push(school);
-                                }
-                            });
-                        });
-                        makeMarkers(aux);
-                    }).catch(error => {
-                        console.log(error)
-                        alert("Não foi possível encontrar as informações requisitadas. ");
-                        return;
-                    });
-            }
-
-        initialize()
     </script>
+    
+    <div class="gcse-searchresults-only"></div>
+        
 
 </div>

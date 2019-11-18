@@ -34,10 +34,6 @@ namespace DreamLearning.Util
 
                 }
 
-                foreach(GeolocationPoint point in geolocationPoints)
-                {
-                    geolocations.Remove(point);
-                }
             }
             return geolocations.OrderBy(x => x.Distance).ToList(); 
         }
