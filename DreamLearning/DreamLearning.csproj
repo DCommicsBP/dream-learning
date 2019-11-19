@@ -219,6 +219,7 @@
     <Content Include="DB\banco.bd" />
     <Content Include="DB\banco.db" />
     <None Include="Properties\PublishProfiles\DreamLearning20191118030836 - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\DreamLearning20191118053237 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\JavaScript.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
